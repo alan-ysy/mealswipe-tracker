@@ -2,3 +2,13 @@
     margin: 0;
     padding: 0;
 }
+
+.container {
+    display: flex;
+    max-width: 50rem;
+    margin: auto;
+}
+
+body {
+    font-family: sans-serif;
+}
