@@ -1,3 +1,5 @@
+const STORAGE_KEY = "userSwipeLog";
+
 const mealPlanSwipeLimits = {
     "universal": {
         weekly: 999,
@@ -31,37 +33,65 @@ const mealPlanSwipeLimits = {
     }
 };
 
-let usedSwipes = {
-    weekly: 0,
-    daily: 0,
-    premium: 0,
-    grabAndGo: 0,
-    lateNight: 0,
-    convenience: 0,
-    portable: 0,
-    scholar: 0
+function defaultState() {
+    return {
+        planType: "",
+        usedSwipes: {
+            weekly: 0,
+            daily: 0,
+            premium: 0,
+            grabAndGo: 0,
+            lateNight: 0,
+            convenience: 0,
+            portable: 0,
+            scholar: 0
+        }
+    };
 }
 
+function loadState() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState();
+    } catch {
+        return defaultState();
+    }
+}
+
+function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// Initialize state
+let state = loadState();
+let mealPlanType = state.planType;
+let usedSwipes = state.usedSwipes;
+
 const mealPlanSelection = document.querySelector("#meal-plan-select");
-let mealPlanType
+if (mealPlanType) {
+    mealPlanSelection.value = mealPlanType;
+}
 mealPlanSelection.addEventListener("change", () => {
     mealPlanType = mealPlanSelection.value;
+    state.planType = mealPlanType;
+    saveState(state);
     updateRemainingSwipes();
 });
 
 const swipeTypeSelection = document.querySelector("#swipe-type-select");
-let swipeType
 swipeTypeSelection.addEventListener("change", () => {
-    swipeType = swipeTypeSelection.value;
+    // no-op: value read on click
 });
 
 // POTENTIAL BUG: on refresh, a swipe type could be selected on the dropdown, but the dropdown value is "undefined"
 const logSwipeBtn = document.querySelector("#log-swipe-btn");
 logSwipeBtn.addEventListener("click", () => {
     const swipeType = kebabToCamel(swipeTypeSelection.value);
+    if (!mealPlanType) return; // require a plan selection first
     usedSwipes.weekly += 1;
     usedSwipes.daily += 1;
     usedSwipes[swipeType] += 1;
+    state.usedSwipes = usedSwipes;
+    saveState(state);
     updateRemainingSwipes();
 });
 
@@ -69,11 +99,13 @@ const weeklyLeftElem = document.querySelector("#week-remaining-swipes");
 const dailyLeftElem = document.querySelector("#day-remaining-swipes");
 const categoryListElem = document.querySelector("#remaining-swipes-categories");
 function updateRemainingSwipes() {
-    weeklyLeft = mealPlanSwipeLimits[mealPlanType]["weekly"] - usedSwipes["weekly"];
-    weeklyLeftElem.innerHTML = "Swipes Left This Week: " + weeklyLeft;
+    if (!mealPlanType || !mealPlanSwipeLimits[mealPlanType]) return;
 
-    dailyLeft = mealPlanSwipeLimits[mealPlanType]["daily"] - usedSwipes["daily"];
-    dailyLeftElem.innerHTML = "Swipes Left Today: " + dailyLeft;
+    const weeklyLeft = mealPlanSwipeLimits[mealPlanType]["weekly"] - usedSwipes["weekly"];
+    weeklyLeftElem.textContent = "Swipes Left This Week: " + weeklyLeft;
+
+    const dailyLeft = mealPlanSwipeLimits[mealPlanType]["daily"] - usedSwipes["daily"];
+    dailyLeftElem.textContent = "Swipes Left Today: " + dailyLeft;
 
     const limits = mealPlanSwipeLimits[mealPlanType]
     Object.entries(limits)
@@ -86,6 +118,9 @@ function updateRemainingSwipes() {
                 li.textContent = li.textContent.split(":")[0] + ": " + remaining;
 		});
 }
+
+// Initial render
+updateRemainingSwipes();
 
 function kebabToCamel(value) {
     return value.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
