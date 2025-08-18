@@ -1,2 +1,2 @@
 # mealswipe-tracker
-An application to help you keep track of your college mealswipes.
+A web application to help CWRU students keep track of their meal swipes.
