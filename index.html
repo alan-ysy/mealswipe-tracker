@@ -4,11 +4,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
-        <title>CWRU Mealswipe Tracker</title>
+        <title>CWRU Meal Swipe Tracker</title>
     </head>
     <body>
         <div class="main-content">
-            <h1>CWRU Mealswipe Tracker</h1>
+            <h1>CWRU Meal Swipe Tracker</h1>
 
             <label for="meal-plan-select">Meal Plan:</label>
             <select name="meal-plans" id="meal-plan-select">
@@ -18,28 +18,30 @@
                 <option value="14-halal-kosher">14 Halal/Kosher Plan</option>
             </select>
 
-            <h2>Remaining Total Weekly Swipes:</h2>
+            <h2 id="week-remaining-swipes">Swipes Left This Week:</h2>
+
+            <h2 id="day-remaining-swipes">Swipes Left Today:</h2>
 
             <h2>Remaining Swipes by Category:</h2>
-            <ul>
-                <li>Premium Swipes:</li>
-                <li>Grab & Go Swipes:</li>
-                <li>Late Night Swipes:</li>
-                <li>Convenience Swipes:</li>
-                <li>Portable Swipes:</li>
-                <li>Scholar Swipes:</li>
+            <ul id="remaining-swipes-categories">
+                <li id="premium">Premium Swipes:</li>
+                <li id="grabAndGo">Grab & Go Swipes:</li>
+                <li id="lateNight">Late Night Swipes:</li>
+                <li id="convenience">Convenience Swipes:</li>
+                <li id="portable">Portable Swipes:</li>
+                <li id="scholar">Scholar Swipes:</li>
             </ul>
             
             <select name="swipe-type" id="swipe-type-select">
                 <option value="" disabled selected>--Select a swipe type--</option>
                 <option value="premium">Premium Swipe</option>
-                <option value="grab-and-go">Grab & Go Swipe</option>
-                <option value="late-night">Late Night Swipe</option>
+                <option value="grabAndGo">Grab & Go Swipe</option>
+                <option value="lateNight">Late Night Swipe</option>
                 <option value="convenience">Convenience Swipe</option>
                 <option value="portable">Portable Swipe</option>
                 <option value="scholar">Scholar Swipe</option>
             </select>
-            <button>Log Swipe</button>
+            <button id="log-swipe-btn">Log Swipe</button>
         </div>
         <script src="script.js"></script>
     </body>
