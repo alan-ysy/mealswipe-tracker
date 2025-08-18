@@ -42,16 +42,10 @@ let usedSwipes = {
     scholar: 0
 }
 
-// Normalize swipe type values from kebab-case (e.g., "grab-and-go") to camelCase (e.g., "grabAndGo")
-function normalizeSwipeKey(value) {
-    return value.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
-}
-
 const mealPlanSelection = document.querySelector("#meal-plan-select");
 let mealPlanType
 mealPlanSelection.addEventListener("change", () => {
     mealPlanType = mealPlanSelection.value;
-    alert("You selected: " + mealPlanType);
     updateRemainingSwipes();
 });
 
@@ -59,23 +53,44 @@ const swipeTypeSelection = document.querySelector("#swipe-type-select");
 let swipeType
 swipeTypeSelection.addEventListener("change", () => {
     swipeType = swipeTypeSelection.value;
-    alert("You selected: " + swipeType);
 });
 
 // POTENTIAL BUG: on refresh, a swipe type could be selected on the dropdown, but the dropdown value is "undefined"
 const logSwipeBtn = document.querySelector("#log-swipe-btn");
 logSwipeBtn.addEventListener("click", () => {
-    const selectedSwipeType = swipeTypeSelection.value;
-    const swipeKey = normalizeSwipeKey(selectedSwipeType);
-    usedSwipes[swipeKey] += 1;
+    const swipeType = kebabToCamel(swipeTypeSelection.value);
     usedSwipes.weekly += 1;
+    usedSwipes.daily += 1;
+    usedSwipes[swipeType] += 1;
     updateRemainingSwipes();
 });
 
-const remainingWeeklySwipes = document.querySelector("#week-remaining-swipes");
-const remainingDailySwipes = document.querySelector("#day-remaining-swipes");
-const remainingSwipesCategories = document.querySelector("#remaining-swipes-categories");
+const weeklyLeftElem = document.querySelector("#week-remaining-swipes");
+const dailyLeftElem = document.querySelector("#day-remaining-swipes");
+const categoryListElem = document.querySelector("#remaining-swipes-categories");
 function updateRemainingSwipes() {
-    const weeklySwipesLeft = mealPlanSwipeLimits[mealPlanType]["weekly"] - usedSwipes.weekly;
-    remainingWeeklySwipes.innerHTML = "Swipes Left This Week: " + weeklySwipesLeft.toString();
+    weeklyLeft = mealPlanSwipeLimits[mealPlanType]["weekly"] - usedSwipes["weekly"];
+    weeklyLeftElem.innerHTML = "Swipes Left This Week: " + weeklyLeft;
+
+    dailyLeft = mealPlanSwipeLimits[mealPlanType]["daily"] - usedSwipes["daily"];
+    dailyLeftElem.innerHTML = "Swipes Left Today: " + dailyLeft;
+
+    const limits = mealPlanSwipeLimits[mealPlanType]
+    Object.entries(limits)
+		.filter(([k]) => k !== "weekly" && k !== "daily")       // Filter out weekly and daily since we already updated them
+		.forEach(([k, limit]) => {
+			const remaining = limit - usedSwipes[k];
+			const li = document.getElementById(camelToKebab(k));
+			if (li)
+                // Use text before colon because it's easier to use the existing text
+                li.textContent = li.textContent.split(":")[0] + ": " + remaining;
+		});
+}
+
+function kebabToCamel(value) {
+    return value.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+function camelToKebab(value) {
+    return value.replace(/[A-Z]/g, m => "-" + m.toLowerCase());
 }
