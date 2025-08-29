@@ -1,8 +1,11 @@
+import MealPlanSelector from "./components/MealPlanSelector";
+
 function App() {
     return (
         <div class="main-content">
             <h1>CWRU Meal Swipe Tracker</h1>
-            {/* MealPlanSelector - label + dropdown for meal plans */}
+            
+            <MealPlanSelector />
             {/* SwipeSummary - weekly/daily remaining swipes */}
             {/* CategoryList - remaining swipes by category */}
                 {/* CategoryItem */}
@@ -11,4 +14,4 @@ function App() {
     )
 }
 
-export default App
+export default App;
