@@ -1,4 +1,5 @@
 import MealPlanSelector from "./components/MealPlanSelector";
+import SwipeSummary from "./components/SwipeSummary";
 
 function App() {
     return (
@@ -6,7 +7,7 @@ function App() {
             <h1>CWRU Meal Swipe Tracker</h1>
             
             <MealPlanSelector />
-            {/* SwipeSummary - weekly/daily remaining swipes */}
+            <SwipeSummary />
             {/* CategoryList - remaining swipes by category */}
                 {/* CategoryItem */}
             {/* SwipeLogger - swipe type select + Log Swipe button */}
