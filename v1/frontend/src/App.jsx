@@ -1,3 +1,4 @@
+import CategoryList from "./components/CategoryList";
 import MealPlanSelector from "./components/MealPlanSelector";
 import SwipeSummary from "./components/SwipeSummary";
 
@@ -8,8 +9,8 @@ function App() {
             
             <MealPlanSelector />
             <SwipeSummary />
-            {/* CategoryList - remaining swipes by category */}
-                {/* CategoryItem */}
+            <CategoryList />
+            {/* TODO: CategoryItem */}
             {/* SwipeLogger - swipe type select + Log Swipe button */}
         </div>
     )
